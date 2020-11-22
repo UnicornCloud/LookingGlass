@@ -1,9 +1,12 @@
-<domain type='kvm'>
+<domain type='kvm' id='2'>
   <name>win10</name>
   <uuid>8516b8f3-00a4-476f-8d35-68baf96013a9</uuid>
   <memory unit='KiB'>4194304</memory>
   <currentMemory unit='KiB'>4194304</currentMemory>
   <vcpu placement='static'>3</vcpu>
+  <resource>
+    <partition>/machine</partition>
+  </resource>
   <os>
     <type arch='x86_64' machine='pc-i440fx-bionic'>hvm</type>
     <loader readonly='yes' type='pflash'>/usr/share/OVMF/OVMF_CODE.fd</loader>
@@ -18,9 +21,30 @@
     </kvm>
     <vmport state='off'/>
   </features>
-  <cpu mode='host-model' check='partial'>
-    <model fallback='allow'/>
-    <topology sockets='1' cores='3' threads='1'/>
+  <cpu mode='custom' match='exact' check='full'>
+    <model fallback='forbid'>Skylake-Client-IBRS</model>
+    <vendor>Intel</vendor>
+    <topology sockets='1' dies='1' cores='3' threads='1'/>
+    <feature policy='require' name='ss'/>
+    <feature policy='require' name='vmx'/>
+    <feature policy='require' name='pdcm'/>
+    <feature policy='require' name='hypervisor'/>
+    <feature policy='require' name='tsc_adjust'/>
+    <feature policy='require' name='clflushopt'/>
+    <feature policy='require' name='umip'/>
+    <feature policy='require' name='md-clear'/>
+    <feature policy='require' name='stibp'/>
+    <feature policy='require' name='arch-capabilities'/>
+    <feature policy='require' name='ssbd'/>
+    <feature policy='require' name='xsaves'/>
+    <feature policy='require' name='pdpe1gb'/>
+    <feature policy='require' name='ibpb'/>
+    <feature policy='require' name='amd-stibp'/>
+    <feature policy='require' name='amd-ssbd'/>
+    <feature policy='require' name='skip-l1dfl-vmentry'/>
+    <feature policy='require' name='pschange-mc-no'/>
+    <feature policy='disable' name='hle'/>
+    <feature policy='disable' name='rtm'/>
   </cpu>
   <clock offset='localtime'>
     <timer name='rtc' tickpolicy='catchup'/>
@@ -38,112 +62,140 @@
     <emulator>/usr/bin/kvm-spice</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/var/lib/libvirt/images/win10.qcow2'/>
+      <source file='/media/me/stor/stor/.uni/cloud/img/win10.qcow2' index='2'/>
+      <backingStore/>
       <target dev='hda' bus='ide'/>
+      <alias name='ide0-0-0'/>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
     </disk>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/var/lib/libvirt/images/add.qcow2'/>
+      <source file='/media/me/stor/stor/.uni/cloud/img/add.qcow2' index='1'/>
+      <backingStore/>
       <target dev='hdb' bus='ide'/>
+      <alias name='ide0-0-1'/>
       <address type='drive' controller='0' bus='0' target='0' unit='1'/>
     </disk>
     <controller type='usb' index='0' model='ich9-ehci1'>
+      <alias name='usb'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x7'/>
     </controller>
     <controller type='usb' index='0' model='ich9-uhci1'>
+      <alias name='usb'/>
       <master startport='0'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0' multifunction='on'/>
     </controller>
     <controller type='usb' index='0' model='ich9-uhci2'>
+      <alias name='usb'/>
       <master startport='2'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x1'/>
     </controller>
     <controller type='usb' index='0' model='ich9-uhci3'>
+      <alias name='usb'/>
       <master startport='4'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x2'/>
     </controller>
-    <controller type='pci' index='0' model='pci-root'/>
+    <controller type='pci' index='0' model='pci-root'>
+      <alias name='pci.0'/>
+    </controller>
     <controller type='virtio-serial' index='0'>
+      <alias name='virtio-serial0'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/>
     </controller>
     <controller type='ide' index='0'>
+      <alias name='ide'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x1'/>
     </controller>
     <interface type='network'>
       <mac address='52:54:00:30:dc:7c'/>
-      <source network='default'/>
+      <source network='default' portid='8c0b1a64-fe7c-48b4-8d41-89dccdc5005e' bridge='virbr0'/>
+      <target dev='vnet0'/>
       <model type='rtl8139'/>
+      <alias name='net0'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
     </interface>
     <serial type='pty'>
+      <source path='/dev/pts/1'/>
       <target type='isa-serial' port='0'>
         <model name='isa-serial'/>
       </target>
+      <alias name='serial0'/>
     </serial>
-    <console type='pty'>
+    <console type='pty' tty='/dev/pts/1'>
+      <source path='/dev/pts/1'/>
       <target type='serial' port='0'/>
+      <alias name='serial0'/>
     </console>
     <channel type='spicevmc'>
-      <target type='virtio' name='com.redhat.spice.0'/>
+      <target type='virtio' name='com.redhat.spice.0' state='disconnected'/>
+      <alias name='channel0'/>
       <address type='virtio-serial' controller='0' bus='0' port='1'/>
     </channel>
-    <input type='mouse' bus='ps2'/>
+    <input type='mouse' bus='ps2'>
+      <alias name='input0'/>
+    </input>
     <input type='keyboard' bus='virtio'>
+      <alias name='input1'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x0b' function='0x0'/>
     </input>
-    <input type='keyboard' bus='ps2'/>
+    <input type='keyboard' bus='ps2'>
+      <alias name='input2'/>
+    </input>
     <graphics type='spice'>
       <listen type='none'/>
       <gl enable='no' rendernode='/dev/dri/by-path/pci-0000:00:02.0-render'/>
     </graphics>
     <sound model='ich9'>
+      <alias name='sound0'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>
     </sound>
     <video>
       <model type='cirrus' vram='16384' heads='1' primary='yes'/>
+      <alias name='video0'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x09' function='0x0'/>
     </video>
     <hostdev mode='subsystem' type='pci' managed='yes'>
+      <driver name='vfio'/>
       <source>
         <address domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
       </source>
+      <alias name='hostdev0'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/>
     </hostdev>
     <hostdev mode='subsystem' type='pci' managed='yes'>
+      <driver name='vfio'/>
       <source>
         <address domain='0x0000' bus='0x01' slot='0x00' function='0x1'/>
       </source>
+      <alias name='hostdev1'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x08' function='0x0'/>
     </hostdev>
-    <hostdev mode='subsystem' type='usb' managed='yes'>
-      <source>
-        <vendor id='0x046d'/>
-        <product id='0xc016'/>
-      </source>
-      <address type='usb' bus='0' port='1'/>
-    </hostdev>
-    <hostdev mode='subsystem' type='usb' managed='yes'>
-      <source>
-        <vendor id='0x413c'/>
-        <product id='0x2011'/>
-      </source>
-      <address type='usb' bus='0' port='4'/>
-    </hostdev>
     <redirdev bus='usb' type='spicevmc'>
+      <alias name='redir0'/>
       <address type='usb' bus='0' port='2'/>
     </redirdev>
     <redirdev bus='usb' type='spicevmc'>
+      <alias name='redir1'/>
       <address type='usb' bus='0' port='3'/>
     </redirdev>
     <memballoon model='virtio'>
+      <alias name='balloon0'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x0a' function='0x0'/>
     </memballoon>
     <shmem name='looking-glass'>
       <model type='ivshmem-plain'/>
       <size unit='M'>32</size>
+      <alias name='shmem0'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
     </shmem>
   </devices>
+  <seclabel type='dynamic' model='apparmor' relabel='yes'>
+    <label>libvirt-8516b8f3-00a4-476f-8d35-68baf96013a9</label>
+    <imagelabel>libvirt-8516b8f3-00a4-476f-8d35-68baf96013a9</imagelabel>
+  </seclabel>
+  <seclabel type='dynamic' model='dac' relabel='yes'>
+    <label>+64055:+108</label>
+    <imagelabel>+64055:+108</imagelabel>
+  </seclabel>
 </domain>
 

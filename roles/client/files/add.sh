@@ -1,4 +1,4 @@
-touch /dev/shm/looking-glass && chown libvirt-qemu:kvm /dev/shm/looking-glass && chmod 660 /dev/shm/looking-glass
+touch /dev/shm/looking-glass && chown libvirt-qemu:kvm /dev/shm/looking-glass && chmod 666 /dev/shm/looking-glass
 
 chmod 666 /dev/shm/looking-glass
 

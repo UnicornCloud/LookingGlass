@@ -1,0 +1,39 @@
+---
+
+- name: Install a list of packages
+  apt:
+    pkg:
+    - binutils-dev
+    - cmake
+    - fonts-freefont-ttf
+    - libsdl2-dev
+    - libsdl2-ttf-dev
+    - libspice-protocol-dev
+    - libfontconfig1-dev
+    - libx11-dev
+    - nettle-dev
+  when:
+  - ansible_distribution == 'Ubuntu'
+  - ansible_distribution == 'Debian'
+
+- name: tmp directory
+  file:
+    path: '{{ansible_user}}/.uni/cloud/tmp'
+    state: directory
+
+- name: Git checkout
+  git:
+    repo: 'https://github.com/gnif/LookingGlass.git'
+    dest: '{{ansible_user}}/.uni/cloud/tmp'
+    version: B2
+
+- name: build directory
+  file:
+    path: '{{ansible_user}}/.uni/cloud/tmp/LookingGlass/client/build'
+    state: directory
+
+# - name: cmake
+#   shell: 'cmake ../'
+#   args:
+#     chdir: '{{ansible_user}}/.uni/cloud/tmp/LookingGlass/client/build'
+#     creates: ?
