@@ -1,0 +1,14 @@
+pre(){
+sudo chmod 666 /dev/shm/looking-glass
+}
+
+inWindow(){
+cd ~/src/Client/ ; ./looking-glass-client
+}
+
+fullscreen(){
+cd ~/src/Client/ ; ./looking-glass-client -F
+}
+
+noSpice = -s
+noScreensaver = -S
