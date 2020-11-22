@@ -1,0 +1,8 @@
+---
+uni: '/home/{{ansible_user}}/.uni'
+
+cloud:
+  img: '{{uni}}/cloud/img'
+  iso: '{{uni}}/cloud/iso'
+  domain: '{{uni}}/cloud/domain'
+  temp: '{{uni}}/cloud/tmp'

@@ -1,11 +1,3 @@
-touch /dev/shm/looking-glass && chown libvirt-qemu:kvm /dev/shm/looking-glass && chmod 666 /dev/shm/looking-glass
-
-chmod 666 /dev/shm/looking-glass
-
-- name: apparmour
-lineinfile:
-path: /etc/apparmor.d/abstractions/libvirt-qemu
-line: '/dev/shm/looking-glass rw,'
 
 
 # Wayland for Lowest Latency

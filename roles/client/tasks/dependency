@@ -1,0 +1,16 @@
+---
+- name: build dependencies
+  apt:
+    pkg:
+    - binutils-dev
+    - cmake
+    - fonts-freefont-ttf
+    - libsdl2-dev
+    - libsdl2-ttf-dev
+    - libspice-protocol-dev
+    - libfontconfig1-dev
+    - libx11-dev
+    - nettle-dev
+  become: true
+  when:
+  - ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'

@@ -1,0 +1,14 @@
+---
+- name: Template a .xml
+  template:
+    src: '{{vm.chipset}}/{{vm.xml}}.j2'
+    dest: '{{cloud.domain}}/{{vm.xml}}'
+
+- debug:
+    msg: '{{cloud.domain}}/{{vm.xml}}'
+
+- name: define vm
+  community.libvirt.virt:
+    command: define
+    uri: 'qemu:///system'
+    xml: "{{ lookup('template', '{{cloud.domain}}/{{vm.xml}}') }}"

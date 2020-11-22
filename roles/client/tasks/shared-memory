@@ -1,0 +1,28 @@
+---
+- name: 'Debian shared memory'
+  file:
+    path: /dev/shm/looking-glass
+    state: touch
+    mode: '0644'
+    owner: libvirt-qemu
+    group: kvm
+    # Makes idempotent
+    access_time: preserve
+    modification_time: preserve
+  become: true
+  when:
+  - ansible_distribution in ['Ubuntu', 'Debian', 'Elementary']
+
+- name: 'RedHat shared memory'
+  debug:
+    msg: 'Red Hat'
+  become: true
+  when:
+  - ansible_distribution in ['CentOS', 'Fedora', 'RedHat']
+
+- name: 'Arch shared memory'
+  debug:
+    msg: 'Arch'
+  become: true
+  when:
+  - ansible_distribution in ['Arch', 'Manjaro']

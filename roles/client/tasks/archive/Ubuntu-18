@@ -1,0 +1,6 @@
+---
+
+- name: apparmour
+  lineinfile:
+  path: /etc/apparmor.d/abstractions/libvirt-qemu
+  line: '/dev/shm/looking-glass rw,'

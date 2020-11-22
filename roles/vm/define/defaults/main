@@ -1,0 +1,10 @@
+---
+cloudimg: '{{cloud.img}}'
+
+vm:
+  name: Test-vm
+  img: win10
+  stor: add
+  type: qcow2
+  chipset: i440FX
+  xml: works-on-20.10.xml

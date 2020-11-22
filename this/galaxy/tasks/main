@@ -1,0 +1,13 @@
+---
+
+- name: Get galaxy stat
+  stat:
+    path: '{{binary}}'
+  register: community_libvirt
+
+- block:
+  - name: Install collection
+    shell: ansible-galaxy collection install community.libvirt
+
+  - meta: end_play
+when: not community_libvirt.stat.isdir

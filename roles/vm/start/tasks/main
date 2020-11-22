@@ -1,0 +1,6 @@
+---
+- name: start vm
+  community.libvirt.virt:
+    name: '{{vm.name}}'
+    state: running
+    uri: 'qemu:///system'

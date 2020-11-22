@@ -1,0 +1,3 @@
+---
+git: '{{cloud.temp}}/LookingGlass'
+binary: /usr/local/bin/looking-glass-client

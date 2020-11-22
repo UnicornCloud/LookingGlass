@@ -1,39 +1,40 @@
 ---
+- include_tasks: shared-memory
 
-- name: Install a list of packages
-  apt:
-    pkg:
-    - binutils-dev
-    - cmake
-    - fonts-freefont-ttf
-    - libsdl2-dev
-    - libsdl2-ttf-dev
-    - libspice-protocol-dev
-    - libfontconfig1-dev
-    - libx11-dev
-    - nettle-dev
-  when:
-  - ansible_distribution == 'Ubuntu'
-  - ansible_distribution == 'Debian'
+- name: Get stat of the binary
+  stat:
+    path: '{{binary}}'
+  register: binaryfile
 
-- name: tmp directory
-  file:
-    path: '{{ansible_user}}/.uni/cloud/tmp'
-    state: directory
+- name: Compile
+  block:
+  - include_tasks: dependency
 
-- name: Git checkout
-  git:
-    repo: 'https://github.com/gnif/LookingGlass.git'
-    dest: '{{ansible_user}}/.uni/cloud/tmp'
-    version: B2
+  - name: Git checkout
+    git:
+      repo: 'https://github.com/gnif/LookingGlass.git'
+      dest: '{{git}}'
+      version: B2
 
-- name: build directory
-  file:
-    path: '{{ansible_user}}/.uni/cloud/tmp/LookingGlass/client/build'
-    state: directory
+  - name: build directory
+    file:
+      path: '{{git}}/client/build'
+      state: directory
 
-# - name: cmake
-#   shell: 'cmake ../'
-#   args:
-#     chdir: '{{ansible_user}}/.uni/cloud/tmp/LookingGlass/client/build'
-#     creates: ?
+  - name: cmake
+    shell: 'cmake ../'
+    args:
+      chdir: '{{git}}/client/build'
+      creates: '{{git}}/client/build/CMakeCache.txt'
+
+  - name: Build looking-glass-client
+    make:
+      chdir: '{{git}}/client/build'
+
+  - name: Copy looking-glass-client to bin
+    copy:
+      src: '{{git}}/client/build/looking-glass-client'
+      dest: '{{binary}}'
+      remote_src: yes
+    become: true
+  when: not binaryfile.stat.exists
