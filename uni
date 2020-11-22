@@ -1,6 +1,8 @@
 ---
 - hosts: default
   roles:
-    - this
-    - test
-    - connect
+  - this
+
+  - test
+  - role: connect
+    tags: try, never
