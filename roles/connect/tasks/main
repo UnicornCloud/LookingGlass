@@ -1,0 +1,23 @@
+---
+
+- name: Reset shared memory permission
+  file:
+    path: /dev/shm/looking-glass
+    mode: '0666'
+  become: true
+
+- name: run in window mode
+  command: looking-glass-client -s
+  when: not spice and not fullscreen
+
+- name: run in window mode with spice
+  command: looking-glass-client -s
+  when: spice and not fullscreen
+
+- name: run in Fullscreen
+  command: looking-glass-client -s
+  when: not spice and fullscreen
+
+- name: run in Fullscreen with spice
+  command: looking-glass-client -s
+  when: spice and fullscreen

@@ -3,7 +3,7 @@
   file:
     path: /dev/shm/looking-glass
     state: touch
-    mode: '0644'
+    mode: '0666'
     owner: libvirt-qemu
     group: kvm
     # Makes idempotent

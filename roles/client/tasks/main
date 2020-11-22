@@ -36,5 +36,6 @@
       src: '{{git}}/client/build/looking-glass-client'
       dest: '{{binary}}'
       remote_src: yes
+      mode: a+x
     become: true
   when: not binaryfile.stat.exists
